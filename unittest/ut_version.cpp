@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <iostream>
+#include <meta/info.hpp>
 
-namespace miu::project {
-extern std::string_view version();
-extern std::string_view build_info();
-}    // namespace miu::project
+#include "cmd/version.hpp"
 
 TEST(ut_version, version) {
-    std::cout << miu::project::version() << std::endl;
-    std::cout << miu::project::build_info() << std::endl;
+    std::cout << miu::cmd::version() << std::endl;
+    std::cout << miu::cmd::build_info() << std::endl;
+
+    std::cout << miu::meta::info() << std::endl;
 }
