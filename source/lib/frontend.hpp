@@ -1,6 +1,7 @@
 #pragma once
 
 #include <com/strcat.hpp>
+#include <map>
 
 #include "cmd/callback.hpp"
 
@@ -11,6 +12,8 @@ class frontend {
     auto insert(com::strcat const& name, callback::func_type const& cb) {
         return _cbs.emplace(name.str(), cb).second;
     }
+
+    auto clear() { _cbs.clear(); }
 
     auto handle(std::string_view name, com::variant const* args, uint32_t size) {
         auto it = _cbs.find(name.data());
