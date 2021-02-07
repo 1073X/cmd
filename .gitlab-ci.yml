@@ -31,18 +31,18 @@ delivery:
         - ./build debug
         - ./build release
 
-          #- mkdir -p $INC_PATH
-          #- rm -fr $INC_PATH/com
-          #- cp -frv ./include/com $INC_PATH
+        - mkdir -p $INC_PATH
+        - rm -fr $INC_PATH/cmd
+        - cp -frv ./include/cmd $INC_PATH
 
-          #- mkdir -p $DBG_PATH
-          #- cp -fv debug/libcom.a $DBG_PATH
+        - mkdir -p $DBG_PATH
+        - cp -fv debug/libcmd.a $DBG_PATH
 
-          #- mkdir -p $REL_PATH
-          #- cp -fv release/libcom.a $REL_PATH
+        - mkdir -p $REL_PATH
+        - cp -fv release/libcmd.a $REL_PATH
 
-          #- mkdir -p $UT_PATH
-          #- cp -fv release/ut_com $UT_PATH
+        - mkdir -p $UT_PATH
+        - cp -fv release/ut_cmd $UT_PATH
 
     only:
         - master
