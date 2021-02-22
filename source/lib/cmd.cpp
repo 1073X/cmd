@@ -23,7 +23,7 @@ void do_insert(com::strcat const& cmd, callback::func_type const& func) {
     }
 }
 
-void reset(std::string_view name, com::microseconds timeout) {
+void reset(std::string_view name, time::delta timeout) {
     auto sock = net::udsock::create_server(name);
     if (sock) {
         sock.set_timeout(timeout);

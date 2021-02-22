@@ -7,6 +7,7 @@
 #include "cmd/cmd.hpp"
 #include "source/lib/server.hpp"
 
+using namespace std::chrono_literals;
 using miu::cmd::message;
 
 struct ut_server : public testing::Test {
@@ -54,20 +55,20 @@ TEST_F(ut_server, handle) {
 
 TEST_F(ut_server, accept_timeout) {
     auto sock = miu::net::udsock::create_server("ut_server");
-    sock.set_timeout(miu::com::microseconds(100));
+    sock.set_timeout(1ms);
 
     miu::cmd::server server { &frontend };
     server.reset(std::move(sock));
 
     server.handle();
-    std::this_thread::sleep_for(miu::com::microseconds(200));
+    std::this_thread::sleep_for(2ms);
 }
 
 TEST_F(ut_server, message_timeout) {
     std::promise<bool> ready;
     std::thread thrd([&]() {
         auto sock = miu::net::udsock::create_server("ut_server");
-        sock.set_timeout(miu::com::microseconds(100));
+        sock.set_timeout(1ms);
 
         miu::cmd::server server { &frontend };
         server.reset(std::move(sock));
@@ -95,7 +96,7 @@ TEST_F(ut_server, payload_timeout) {
     std::promise<bool> ready;
     std::thread thrd([&]() {
         auto sock = miu::net::udsock::create_server("ut_server");
-        sock.set_timeout(miu::com::microseconds(100));
+        sock.set_timeout(1ms);
 
         miu::cmd::server server { &frontend };
         server.reset(std::move(sock));
