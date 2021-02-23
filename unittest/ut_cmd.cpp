@@ -28,6 +28,9 @@ TEST_F(ut_cmd, reset) {
     miu::cmd::reset("ut_cmd_reset", miu::time::delta { 1000 });
     std::thread thrd([]() { miu::cmd::handle(); });
 
+    EXPECT_EQ("uds", miu::cmd::svr_type());
+    EXPECT_EQ(miu::time::delta(1000), miu::cmd::interval());
+
     miu::cmd::reset();
     thrd.join();
 }
