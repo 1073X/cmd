@@ -13,7 +13,7 @@ auto insert(com::strcat const& cmd, F const& func, ARGS&&... args) {
     do_insert(cmd, callback::make(func, std::forward<ARGS>(args)...));
 }
 
-extern void reset(std::string_view, time::delta);
+extern void reset(std::string_view = "", time::delta = 0);
 extern void handle();
 
 }    // namespace miu::cmd

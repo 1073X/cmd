@@ -126,6 +126,25 @@ TEST_F(ut_client, recv_failed) {
     EXPECT_EQ(nullptr, client.recv(buf, sizeof(buf)));
 }
 
+TEST_F(ut_client, recv_not_enough_buf) {
+    std::promise<bool> ready;
+    std::thread thrd([&]() {
+        auto sock = miu::net::udsock::create_server("ut_client");
+        ready.set_value(true);
+
+        sock.accept();
+    });
+
+    ready.get_future().get();
+
+    auto client = miu::cmd::client("ut_client");
+    thrd.join();
+
+    char buf[512];
+    EXPECT_EQ(nullptr, client.recv(buf, sizeof(message) - 1));    // not enough for message header
+    EXPECT_EQ(nullptr, client.recv(buf, sizeof(message)));        // not enough for payload
+}
+
 TEST_F(ut_client, disconnected) {
     miu::cmd::client client { "ut_client" };
     EXPECT_FALSE(client.send(100, { "cmd", 123 }, { 1, 2 }));
