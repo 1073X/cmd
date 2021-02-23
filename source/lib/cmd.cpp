@@ -14,6 +14,14 @@ namespace miu::cmd {
 static frontend g_frontend;
 static server g_server { &g_frontend };
 
+std::string svr_type() {
+    return "uds";
+}
+
+time::delta interval() {
+    return g_server.interval();
+}
+
 void do_insert(com::strcat const& cmd, callback::func_type const& func) {
     if (g_frontend.insert(cmd.str(), func)) {
         log::info(+"cmd ADD", cmd.str());

@@ -14,6 +14,8 @@ class server {
     server(frontend* fe)
         : _frontend(fe) {}
 
+    auto interval() const { return _svr_sock.timeout(); }
+
     auto reset(net::socket&& sock) {
         assert(sock.acceptconn());
         std::swap(sock, _svr_sock);
