@@ -11,19 +11,19 @@
 
 namespace miu::cmd {
 
-static frontend g_frontend;
-static server g_server { &g_frontend };
+static frontend g_front;
+static server g_svr { &g_front };
 
 std::string svr_type() {
     return "uds";
 }
 
 time::delta interval() {
-    return g_server.interval();
+    return g_svr.interval();
 }
 
 void do_insert(com::strcat const& cmd, callback::func_type const& func) {
-    if (g_frontend.insert(cmd.str(), func)) {
+    if (g_front.insert(cmd.str(), func)) {
         log::info(+"cmd ADD", cmd.str());
     } else {
         log::error(+"cmd DUP", cmd.str());
@@ -36,16 +36,17 @@ void reset(std::string_view name, time::delta timeout) {
         auto sock = net::udsock::create_server(name);
         if (sock) {
             sock.set_timeout(timeout);
-            g_server.reset(std::move(sock));
+            g_svr.reset(std::move(sock));
         }
     } else {
         auto sock = net::socket {};
-        g_server.reset(std::move(sock));
+        g_svr.reset(std::move(sock));
+        g_front.clear();
     }
 }
 
 void handle() {
-    g_server.handle();
+    g_svr.handle();
 }
 
 }    // namespace miu::cmd
