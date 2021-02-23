@@ -19,6 +19,8 @@ class message {
 
     auto seq_num() const { return _seq_num; }
 
+    auto padding() const { return _padding; }
+
   public:
     template<typename... ARGS>
     static message const*

@@ -24,3 +24,10 @@ TEST_F(ut_cmd, insert) {
     EXPECT_ANY_THROW(miu::cmd::insert({ "cmd", 123 }, &ut_cmd::func, this););
 }
 
+TEST_F(ut_cmd, reset) {
+    miu::cmd::reset("ut_cmd_reset", miu::time::delta { 1000 });
+    std::thread thrd([]() { miu::cmd::handle(); });
+
+    miu::cmd::reset();
+    thrd.join();
+}
