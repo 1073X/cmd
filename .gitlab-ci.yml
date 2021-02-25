@@ -44,6 +44,9 @@ delivery:
         - mkdir -p $UT_PATH
         - cp -fv release/ut_cmd $UT_PATH
 
+        - mkdir -p $BIN_PATH
+        - cp -fv release/sendcmd $BIN_PATH
+
     only:
         - master
 
