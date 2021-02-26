@@ -12,7 +12,12 @@ struct collector {
         auto constexpr IDX = I - 1;
         using ARG          = typename std::tuple_element<IDX, tuple_type>::type;
 
-        std::get<IDX>(collected) = args[IDX].get<ARG>().value();
+        auto arg = args[IDX].get<ARG>();
+        if (!arg.has_value()) {
+            throw std::invalid_argument("ILL_ARG " + com::to_string(IDX));
+        }
+
+        std::get<IDX>(collected) = arg.value();
         return collector<tuple_type, IDX>()(collected, args);
     }
 };
@@ -29,7 +34,7 @@ auto collect(com::variant const* vars, uint32_t size) {
     auto constexpr tuple_size = std::tuple_size<tuple_type>::value;
 
     if (tuple_size > size) {
-        FATAL_ERROR<std::logic_error>("lack of args", size, "<", tuple_size);
+        throw std::invalid_argument("MISS_ARG " + com::to_string(tuple_size));
     }
 
     tuple_type collected;
@@ -37,8 +42,21 @@ auto collect(com::variant const* vars, uint32_t size) {
 }
 
 /////////////////////////////////////////////////////
-template<typename>
-struct wrapper;
+template<typename T>
+struct wrapper {
+    template<typename... ARGS>
+    static com::variant call(std::function<void(ARGS...)> const& f,
+                             com::variant const* vars,
+                             uint32_t size) {
+        auto args = collect<ARGS...>(vars, size);
+        std::apply([&](auto... args) { return f(args...); }, args);
+        return {};
+    }
+
+    static auto bounce(T const& t, com::variant const* vars, uint32_t size) {
+        return wrapper::call(std::function(t), vars, size);
+    }
+};
 
 template<typename T, typename... ARGS>
 struct wrapper<void (T::*)(ARGS...)> {

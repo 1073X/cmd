@@ -48,7 +48,7 @@ TEST_F(ut_server, handle) {
     EXPECT_EQ(99U, rsp->seq_num());
     EXPECT_STREQ(req->cmd(), rsp->cmd());
     EXPECT_EQ(1, rsp->args_count());
-    EXPECT_EQ(miu::com::variant { std::string("UNKNOWN_CMD") }, rsp->args()[0]);
+    EXPECT_EQ(miu::com::variant { std::string("UKN_CMD") }, rsp->args()[0]);
 
     thrd.join();
 }
@@ -119,7 +119,7 @@ TEST_F(ut_server, payload_timeout) {
     auto rsp = (message const*)rsp_buf;
     EXPECT_EQ(100U, rsp->seq_num());
     EXPECT_EQ(1, rsp->args_count());
-    EXPECT_EQ(miu::com::variant { std::string("UNKNOWN_CMD") }, rsp->args()[0]);
+    EXPECT_EQ(miu::com::variant { std::string("UKN_CMD") }, rsp->args()[0]);
 
     thrd.join();
 }
